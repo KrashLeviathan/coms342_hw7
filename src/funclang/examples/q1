@@ -1,0 +1,9 @@
+(define cuboidVolume (
+  lambda (L) (
+    lambda (W) (
+      lambda (H) (* L W H)
+    )
+  )
+))
+
+(((cuboidVolume 3) 4) 2)
