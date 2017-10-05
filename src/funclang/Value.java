@@ -107,7 +107,7 @@ public interface Value {
 	    	if(isList()) return listToString();
 	    	return "(" + _fst.tostring() + " " + _snd.tostring() + ")"; 
 	    }
-	    private boolean isList() {
+	    protected boolean isList() {
 	    	if(_snd instanceof Value.Null) return true;
 	    	if(_snd instanceof Value.PairVal &&
 	    		((Value.PairVal) _snd).isList()) return true;

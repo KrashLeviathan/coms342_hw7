@@ -26,6 +26,13 @@ import ListLang; //Import all rules from ListLang grammar.
         | cons=consexp { $ast = $cons.ast; }
         | list=listexp { $ast = $list.ast; }
         | nl=nullexp { $ast = $nl.ast; }
+        | npe=numberpred { $ast = $npe.ast; }
+        | bpe=booleanpred { $ast = $bpe.ast; }
+        | spe=stringpred { $ast = $spe.ast; }
+        | ppe=procedurepred { $ast = $ppe.ast; }
+        | rpe=pairpred { $ast = $rpe.ast; }
+        | lpe=listpred { $ast = $lpe.ast; }
+        | upe=unitpred { $ast = $upe.ast; }
         ;
 
  lambdaexp returns [LambdaExp ast] 
@@ -67,8 +74,50 @@ import ListLang; //Import all rules from ListLang grammar.
  		;
 
  greaterexp returns [GreaterExp ast] :
- 		'(' Greater 
- 		    e1=exp 
- 			e2=exp 
+ 		'(' Greater
+ 		    e1=exp
+ 			e2=exp
  		')' { $ast = new GreaterExp($e1.ast,$e2.ast); }
+ 		;
+
+numberpred returns [NumberPredExp ast] :
+ 		'(' 'number?'
+ 		    e=exp
+ 		')' { $ast = new NumberPredExp($e.ast); }
+ 		;
+
+booleanpred returns [BooleanPredExp ast] :
+ 		'(' 'boolean?'
+ 		    e=exp
+ 		')' { $ast = new BooleanPredExp($e.ast); }
+ 		;
+
+stringpred returns [StringPredExp ast] :
+ 		'(' 'string?'
+ 		    e=exp
+ 		')' { $ast = new StringPredExp($e.ast); }
+ 		;
+
+procedurepred returns [ProcedurePredExp ast] :
+ 		'(' 'procedure?'
+ 		    e=exp
+ 		')' { $ast = new ProcedurePredExp($e.ast); }
+ 		;
+
+pairpred returns [PairPredExp ast] :
+ 		'(' 'pair?'
+ 		    e=exp
+ 		')' { $ast = new PairPredExp($e.ast); }
+ 		;
+
+listpred returns [ListPredExp ast] :
+ 		'(' 'list?'
+ 		    e=exp
+ 		')' { $ast = new ListPredExp($e.ast); }
+ 		;
+
+unitpred returns [UnitPredExp ast] :
+ 		'(' 'unit?'
+ 		    e=exp
+ 		')' { $ast = new UnitPredExp($e.ast); }
  		;

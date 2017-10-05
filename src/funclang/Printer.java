@@ -175,6 +175,55 @@ public class Printer {
 			result += e.arg().accept(this, env);
 			return result + ")";
 		}
-		
+
+		@Override
+		public String visit(AST.NumberPredExp e, Env env) {
+			String result = "(number? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.BooleanPredExp e, Env env) {
+			String result = "(boolean? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.StringPredExp e, Env env) {
+			String result = "(string? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.ProcedurePredExp e, Env env) {
+			String result = "(procedure? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.PairPredExp e, Env env) {
+			String result = "(pair? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.ListPredExp e, Env env) {
+			String result = "(list? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.UnitPredExp e, Env env) {
+			String result = "(unit? ";
+			result += e.arg().accept(this, env);
+			return result + ")";
+		}
+
 	}
 }

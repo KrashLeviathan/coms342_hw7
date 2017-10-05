@@ -248,6 +248,48 @@ public class Evaluator implements Visitor<Value> {
 		}
 	}
 
+	@Override
+	public Value visit(NumberPredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal(val instanceof Value.NumVal);
+	}
+
+	@Override
+	public Value visit(BooleanPredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal(val instanceof Value.BoolVal);
+	}
+
+	@Override
+	public Value visit(StringPredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal(val instanceof Value.StringVal);
+	}
+
+	@Override
+	public Value visit(ProcedurePredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal(val instanceof Value.FunVal);
+	}
+
+	@Override
+	public Value visit(PairPredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal(val instanceof Value.PairVal && !((PairVal) val).isList());
+	}
+
+	@Override
+	public Value visit(ListPredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal((val instanceof Value.PairVal && ((PairVal) val).isList()) || val instanceof Value.Null);
+	}
+
+	@Override
+	public Value visit(UnitPredExp e, Env env) {
+		Value val = (Value) e.arg().accept(this, env);
+		return new BoolVal(val instanceof Value.UnitVal);
+	}
+
 	private Env initialEnv() {
 		GlobalEnv initEnv = new GlobalEnv();
 		

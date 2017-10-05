@@ -539,7 +539,7 @@ public interface AST {
 	 *
 	 */
 	public static class NullExp extends Exp {
-		private Exp _arg; 
+		private Exp _arg;
 		public NullExp(Exp arg){
 			_arg = arg;
 		}
@@ -580,7 +580,84 @@ public interface AST {
 			return visitor.visit(this, env);
 		}
 	}
-	
+
+	public static class NumberPredExp extends Exp {
+		private Exp _arg;
+		public NumberPredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
+	public static class BooleanPredExp extends Exp {
+		private Exp _arg;
+		public BooleanPredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
+	public static class StringPredExp extends Exp {
+		private Exp _arg;
+		public StringPredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
+	public static class ProcedurePredExp extends Exp {
+		private Exp _arg;
+		public ProcedurePredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
+	public static class PairPredExp extends Exp {
+		private Exp _arg;
+		public PairPredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
+	public static class ListPredExp extends Exp {
+		private Exp _arg;
+		public ListPredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
+	public static class UnitPredExp extends Exp {
+		private Exp _arg;
+		public UnitPredExp(Exp arg){
+			_arg = arg;
+		}
+		public Exp arg() { return _arg; }
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+	}
+
 	public interface Visitor <T> {
 		// This interface should contain a signature for each concrete AST node.
 		public T visit(AST.AddExp e, Env env);
@@ -608,5 +685,12 @@ public interface AST {
 		public T visit(AST.ConsExp e, Env env); // Additional expressions for convenience
 		public T visit(AST.ListExp e, Env env); // Additional expressions for convenience
 		public T visit(AST.NullExp e, Env env); // Additional expressions for convenience
-	}	
+		public T visit(AST.NumberPredExp e, Env env);
+		public T visit(AST.BooleanPredExp e, Env env);
+		public T visit(AST.StringPredExp e, Env env);
+		public T visit(AST.ProcedurePredExp e, Env env);
+		public T visit(AST.PairPredExp e, Env env);
+		public T visit(AST.ListPredExp e, Env env);
+		public T visit(AST.UnitPredExp e, Env env);
+	}
 }
