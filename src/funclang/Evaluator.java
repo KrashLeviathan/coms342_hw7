@@ -10,7 +10,9 @@ import java.io.IOException;
 import funclang.Env.*;
 
 public class Evaluator implements Visitor<Value> {
-	
+
+	Heap.Heap16Bit heap = new Heap.Heap16Bit();
+
 	Printer.Formatter ts = new Printer.Formatter();
 
 	Env initEnv = initialEnv(); //New for definelang
@@ -18,7 +20,37 @@ public class Evaluator implements Visitor<Value> {
 	Value valueOf(Program p) {
 			return (Value) p.accept(this, initEnv);
 	}
-	
+
+	@Override
+	public Value visit(LocExp e, Env env) {
+		NumVal loc = (NumVal) e.loc().accept(this, env); // Dynamic type-checking
+		int locAsInt = (int) Math.floor(loc.v());
+		return new RefVal(locAsInt);
+	}
+
+	@Override
+	public Value visit(RefExp e, Env env) {
+		return heap.ref((Value) e.e().accept(this, env));
+	}
+
+	@Override
+	public Value visit(DerefExp e, Env env) {
+		return heap.deref((RefVal) e.loc().accept(this, env));
+	}
+
+	@Override
+	public Value visit(AssignExp e, Env env) {
+		return heap.setref(
+				(RefVal) e.loc().accept(this, env),
+				(Value) e.val().accept(this, env)
+		);
+	}
+
+	@Override
+	public Value visit(FreeExp e, Env env) {
+		return heap.free((RefVal) e.loc().accept(this, env));
+	}
+
 	@Override
 	public Value visit(AddExp e, Env env) {
 		List<Exp> operands = e.all();

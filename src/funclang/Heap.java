@@ -18,7 +18,7 @@ public interface Heap {
     Value free(Value.RefVal loc);
 
     static class Heap16Bit implements Heap {
-        Value[] _rep;
+        Value[] _rep = new Value[16];
         Queue<Integer> _freeSpaces = new LinkedList<>();
         int _furthestIndex = -1;
 

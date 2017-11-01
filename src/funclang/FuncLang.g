@@ -33,9 +33,45 @@ import ListLang; //Import all rules from ListLang grammar.
         | rpe=pairpred { $ast = $rpe.ast; }
         | lpe=listpred { $ast = $lpe.ast; }
         | upe=unitpred { $ast = $upe.ast; }
+        | re=refexp { $ast = $re.ast; }
+        | dre=derefexp { $ast = $dre.ast; }
+        | ass=assignexp { $ast = $ass.ast; }
+        | free=freeexp { $ast = $free.ast; }
+        | loc=locexp { $ast = $loc.ast; }
         ;
 
- lambdaexp returns [LambdaExp ast] 
+ locexp returns [LocExp ast] :
+        '(' 'loc'
+            e=exp
+        ')' { $ast = new LocExp($e.ast); }
+        ;
+
+ refexp returns [RefExp ast] :
+        '(' 'ref'
+            e=exp
+        ')' { $ast = new RefExp($e.ast); }
+        ;
+
+ derefexp returns [DerefExp ast] :
+        '(' 'deref'
+            e=locexp
+        ')' { $ast = new DerefExp($e.ast); }
+        ;
+
+ assignexp returns [AssignExp ast] :
+        '(' 'assign'
+            e1=locexp
+            e2=exp
+        ')' { $ast = new AssignExp($e1.ast, $e2.ast); }
+        ;
+
+ freeexp returns [FreeExp ast] :
+        '(' 'free'
+            e=locexp
+        ')' { $ast = new FreeExp($e.ast); }
+        ;
+
+ lambdaexp returns [LambdaExp ast]
         locals [ArrayList<String> formals, String optlastid, Exp optlastexp ]
  		@init { $formals = new ArrayList<String>(); $optlastid = null; } :
  		'(' Lambda 

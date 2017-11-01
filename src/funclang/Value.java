@@ -4,10 +4,11 @@ import java.util.List;
 
 import funclang.AST.Exp;
 
+@SuppressWarnings("ALL")
 public interface Value {
 	public String tostring();
 	public boolean equals(Value other);
-	static class RefVal implements Value {
+    static class RefVal implements Value {
 		private int _loc;
 		public RefVal(int location) {
 			_loc = location;

@@ -14,7 +14,43 @@ public class Printer {
 	}
 	
 	public static class Formatter implements AST.Visitor<String> {
-		
+
+		@Override
+		public String visit(AST.LocExp e, Env env) {
+			String result = "(loc";
+			result += e.loc().accept(this, env) + " ";
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.RefExp e, Env env) {
+			String result = "(ref ";
+			result += e.e().accept(this, env) + " ";
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.DerefExp e, Env env) {
+			String result = "(deref ";
+			result += e.loc().accept(this, env) + " ";
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.AssignExp e, Env env) {
+			String result = "(assign ";
+			result += e.loc().accept(this, env) + " ";
+			result += e.val().accept(this, env) + " ";
+			return result + ")";
+		}
+
+		@Override
+		public String visit(AST.FreeExp e, Env env) {
+			String result = "(free ";
+			result += e.loc().accept(this, env) + " ";
+			return result + ")";
+		}
+
 		public String visit(AST.AddExp e, Env env) {
 			String result = "(+ ";
 			for(AST.Exp exp : e.all()) 
