@@ -129,7 +129,7 @@ public class Evaluator implements Visitor<Value> {
 
 	@Override
 	public Value visit(LambdaExp e, Env env) { // New for funclang.
-		return new Value.FunVal(env, e.formals(), e.body());
+		return new Value.FunVal(env, e.formals(), e.body(), e.optLastExp());
 	}
 	
 	@Override
@@ -146,8 +146,14 @@ public class Evaluator implements Visitor<Value> {
 			actuals.add((Value)exp.accept(this, env));
 		
 		List<String> formals = operator.formals();
-		if (formals.size()!=actuals.size())
-			return new Value.DynamicError("Argument mismatch in call " + ts.visit(e, env));
+		if (formals.size()!=actuals.size()) {
+			if (formals.size() == actuals.size() + 1 && operator.optLastExp() != null) {
+				Value defaultVal = (Value) operator.optLastExp().accept(this, env);
+				actuals.add(defaultVal);
+			} else {
+				return new Value.DynamicError("Argument mismatch in call " + ts.visit(e, env));
+			}
+		}
 
 		Env fun_env = operator.env();
 		for (int index = 0; index < formals.size(); index++)
@@ -297,14 +303,14 @@ public class Evaluator implements Visitor<Value> {
 		List<String> formals = new ArrayList<>();
 		formals.add("file");
 		Exp body = new AST.ReadExp(new VarExp("file"));
-		Value.FunVal readFun = new Value.FunVal(initEnv, formals, body);
+		Value.FunVal readFun = new Value.FunVal(initEnv, formals, body, null);
 		initEnv.extend("read", readFun);
 
 		/* Procedure: (require <filename>). Following is same as (define require (lambda (file) (eval (read file)))) */
 		formals = new ArrayList<>();
 		formals.add("file");
 		body = new EvalExp(new AST.ReadExp(new VarExp("file")));
-		Value.FunVal requireFun = new Value.FunVal(initEnv, formals, body);
+		Value.FunVal requireFun = new Value.FunVal(initEnv, formals, body, null);
 		initEnv.extend("require", requireFun);
 		
 		/* Add new built-in procedures here */ 

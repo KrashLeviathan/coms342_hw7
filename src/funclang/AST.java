@@ -319,15 +319,24 @@ public interface AST {
 	public static class LambdaExp extends Exp {		
 		List<String> _formals;
 		Exp _body;
+		Exp _optLastExp;
 		
 		public LambdaExp(List<String> formals, Exp body) {
 			_formals = formals;
 			_body = body;
 		}
+
+		public LambdaExp(List<String> formals, Exp body, String optLastId, Exp optLastExp) {
+			this(formals, body);
+			_formals.add(optLastId);
+			_optLastExp = optLastExp;
+		}
 		
 		public List<String> formals() { return _formals; }
 		
 		public Exp body() { return _body; }
+
+		public Exp optLastExp() { return _optLastExp; }
 		
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);

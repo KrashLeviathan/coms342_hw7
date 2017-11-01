@@ -12,18 +12,31 @@ public interface Value {
 		private Env _env;
 		private List<String> _formals;
 		private Exp _body;
-		public FunVal(Env env, List<String> formals, Exp body) {
+		private Exp _optLastExp;
+		public FunVal(Env env, List<String> formals, Exp body, Exp optLastExp) {
 			_env = env;
 			_formals = formals;
 			_body = body;
+			_optLastExp = optLastExp;
 		}
 		public Env env() { return _env; }
 		public List<String> formals() { return _formals; }
 		public Exp body() { return _body; }
+		public Exp optLastExp() { return _optLastExp; }
 	    public String tostring() { 
 			String result = "(lambda ( ";
-			for(String formal : _formals) 
-				result += formal + " ";
+			if (_optLastExp == null) {
+				for (String formal : _formals) {
+					result += formal + " ";
+				}
+			} else {
+				int i = 0;
+				while (i < _formals.size()-1) {
+					result += _formals.get(i) + " ";
+					i++;
+				}
+				result += "( " + _formals.get(i) + " = " + _optLastExp.accept(new Printer.Formatter(), _env) + " )";
+			}
 			result += ") ";
 			result += _body.accept(new Printer.Formatter(), _env);
 			return result + ")";

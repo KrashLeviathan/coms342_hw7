@@ -36,12 +36,15 @@ import ListLang; //Import all rules from ListLang grammar.
         ;
 
  lambdaexp returns [LambdaExp ast] 
-        locals [ArrayList<String> formals ]
- 		@init { $formals = new ArrayList<String>(); } :
+        locals [ArrayList<String> formals, String optlastid, Exp optlastexp ]
+ 		@init { $formals = new ArrayList<String>(); $optlastid = null; } :
  		'(' Lambda 
- 			'(' (id=Identifier { $formals.add($id.text); } )* ')'
+ 			'('
+ 			    (id=Identifier { $formals.add($id.text); } )*
+ 			    ('(' lastid=Identifier '=' lastexp=exp ')' { $optlastid = $lastid.text; $optlastexp = $lastexp.ast; } )?
+ 			')'
  			body=exp 
- 		')' { $ast = new LambdaExp($formals, $body.ast); }
+ 		')' { $ast = ($optlastid == null) ? new LambdaExp($formals, $body.ast) : new LambdaExp($formals, $body.ast, $optlastid, $optlastexp); }
  		;
 
  callexp returns [CallExp ast] 
