@@ -1,13 +1,38 @@
 package funclang;
 
 import java.util.List;
-import java.util.Objects;
 
 import funclang.AST.Exp;
 
 public interface Value {
 	public String tostring();
 	public boolean equals(Value other);
+	static class RefVal implements Value {
+		private int _loc;
+		public RefVal(int location) {
+			_loc = location;
+		}
+		public int loc() { return _loc; }
+		@Override
+		public String tostring() {
+			return "loc:" + _loc;
+		}
+		// https://www.sitepoint.com/implement-javas-equals-method-correctly/
+		@Override
+		public boolean equals(Value other) {
+			if (this == other) {
+				return true;
+			}
+			if (other == null) {
+				return false;
+			}
+			if (getClass() != other.getClass()) {
+				return false;
+			}
+			RefVal casted = (RefVal) other;
+			return this.loc() == casted.loc();
+		}
+	}
 	static class FunVal implements Value { //New in the funclang
 		private Env _env;
 		private List<String> _formals;
@@ -23,7 +48,7 @@ public interface Value {
 		public List<String> formals() { return _formals; }
 		public Exp body() { return _body; }
 		public Exp optLastExp() { return _optLastExp; }
-	    public String tostring() { 
+	    public String tostring() {
 			String result = "(lambda ( ";
 			if (_optLastExp == null) {
 				for (String formal : _formals) {
@@ -48,12 +73,12 @@ public interface Value {
 	}
 	static class NumVal implements Value {
 	    private double _val;
-	    public NumVal(double v) { _val = v; } 
+	    public NumVal(double v) { _val = v; }
 	    public double v() { return _val; }
-	    public String tostring() { 
+	    public String tostring() {
 	    	int tmp = (int) _val;
 	    	if(tmp == _val) return "" + tmp;
-	    	return "" + _val; 
+	    	return "" + _val;
 	    }
 		// https://www.sitepoint.com/implement-javas-equals-method-correctly/
 		public boolean equals(Value other) {
@@ -72,7 +97,7 @@ public interface Value {
 	}
 	static class BoolVal implements Value {
 		private boolean _val;
-	    public BoolVal(boolean v) { _val = v; } 
+	    public BoolVal(boolean v) { _val = v; }
 	    public boolean v() { return _val; }
 	    public String tostring() { if(_val) return "#t"; return "#f"; }
 		// https://www.sitepoint.com/implement-javas-equals-method-correctly/
@@ -92,7 +117,7 @@ public interface Value {
 	}
 	static class StringVal implements Value {
 		private java.lang.String _val;
-	    public StringVal(String v) { _val = v; } 
+	    public StringVal(String v) { _val = v; }
 	    public String v() { return _val; }
 	    public java.lang.String tostring() { return "" + _val; }
 		// https://www.sitepoint.com/implement-javas-equals-method-correctly/
@@ -113,12 +138,12 @@ public interface Value {
 	static class PairVal implements Value {
 		protected Value _fst;
 		protected Value _snd;
-	    public PairVal(Value fst, Value snd) { _fst = fst; _snd = snd; } 
+	    public PairVal(Value fst, Value snd) { _fst = fst; _snd = snd; }
 		public Value fst() { return _fst; }
 		public Value snd() { return _snd; }
-	    public java.lang.String tostring() { 
+	    public java.lang.String tostring() {
 	    	if(isList()) return listToString();
-	    	return "(" + _fst.tostring() + " " + _snd.tostring() + ")"; 
+	    	return "(" + _fst.tostring() + " " + _snd.tostring() + ")";
 	    }
 	    protected boolean isList() {
 	    	if(_snd instanceof Value.Null) return true;
@@ -129,7 +154,7 @@ public interface Value {
 	    private java.lang.String listToString() {
 	    	String result = "(";
 	    	result += _fst.tostring();
-	    	Value next = _snd; 
+	    	Value next = _snd;
 	    	while(!(next instanceof Value.Null)) {
 	    		result += " " + ((PairVal) next)._fst.tostring();
 	    		next = ((PairVal) next)._snd;
@@ -167,7 +192,7 @@ public interface Value {
 			return this == other || other != null && getClass() == other.getClass();
 		}
 	}
-	static class DynamicError implements Value { 
+	static class DynamicError implements Value {
 		private String message = "Unknown dynamic error.";
 		public DynamicError(String message) { this.message = message; }
 	    public String tostring() { return "" + message; }
