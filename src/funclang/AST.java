@@ -54,10 +54,10 @@ public interface AST {
 	}
 
 	public static class DerefExp extends Exp {
-        LocExp _exp;
+        Exp _exp;
 
-        public DerefExp(LocExp exp) { _exp = exp; }
-        public LocExp loc() { return _exp; }
+        public DerefExp(Exp exp) { _exp = exp; }
+        public Exp loc() { return _exp; }
 
 		@Override
 		public Object accept(Visitor visitor, Env env) {
@@ -66,14 +66,14 @@ public interface AST {
 	}
 
 	public static class AssignExp extends Exp {
-	    LocExp _loc;
+	    Exp _loc;
 	    Exp _val;
 
-		public AssignExp(LocExp loc, Exp val) {
+		public AssignExp(Exp loc, Exp val) {
 			_loc = loc;
 			_val = val;
 		}
-        public LocExp loc() { return _loc; }
+        public Exp loc() { return _loc; }
         public Exp val() { return _val; }
 
 		@Override
@@ -83,21 +83,9 @@ public interface AST {
 	}
 
 	public static class FreeExp extends Exp {
-        LocExp _exp;
+        Exp _exp;
 
-		public FreeExp(LocExp exp) { _exp = exp; }
-		public LocExp loc() { return _exp; }
-
-		@Override
-		public Object accept(Visitor visitor, Env env) {
-			return visitor.visit(this, env);
-		}
-	}
-
-	public static class LocExp extends Exp {
-		Exp _exp;
-
-		public LocExp(Exp exp) { _exp = exp; }
+		public FreeExp(Exp exp) { _exp = exp; }
 		public Exp loc() { return _exp; }
 
 		@Override
@@ -734,7 +722,6 @@ public interface AST {
 
 	public interface Visitor <T> {
 		// This interface should contain a signature for each concrete AST node.
-        public T visit(AST.LocExp e, Env env);
 		public T visit(AST.RefExp e, Env env);
 		public T visit(AST.DerefExp e, Env env);
 		public T visit(AST.AssignExp e, Env env);

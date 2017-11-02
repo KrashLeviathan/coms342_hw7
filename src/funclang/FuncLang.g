@@ -37,37 +37,30 @@ import ListLang; //Import all rules from ListLang grammar.
         | dre=derefexp { $ast = $dre.ast; }
         | ass=assignexp { $ast = $ass.ast; }
         | free=freeexp { $ast = $free.ast; }
-        | loc=locexp { $ast = $loc.ast; }
-        ;
-
- locexp returns [LocExp ast] :
-        '(' 'loc'
-            e=exp
-        ')' { $ast = new LocExp($e.ast); }
         ;
 
  refexp returns [RefExp ast] :
-        '(' 'ref'
+        '(' Ref
             e=exp
         ')' { $ast = new RefExp($e.ast); }
         ;
 
  derefexp returns [DerefExp ast] :
-        '(' 'deref'
-            e=locexp
+        '(' Deref
+            e=exp
         ')' { $ast = new DerefExp($e.ast); }
         ;
 
  assignexp returns [AssignExp ast] :
-        '(' 'assign'
-            e1=locexp
+        '(' Assign
+            e1=exp
             e2=exp
         ')' { $ast = new AssignExp($e1.ast, $e2.ast); }
         ;
 
  freeexp returns [FreeExp ast] :
-        '(' 'free'
-            e=locexp
+        '(' Free
+            e=exp
         ')' { $ast = new FreeExp($e.ast); }
         ;
 

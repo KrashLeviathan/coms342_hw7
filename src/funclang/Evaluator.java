@@ -22,13 +22,6 @@ public class Evaluator implements Visitor<Value> {
 	}
 
 	@Override
-	public Value visit(LocExp e, Env env) {
-		NumVal loc = (NumVal) e.loc().accept(this, env); // Dynamic type-checking
-		int locAsInt = (int) Math.floor(loc.v());
-		return new RefVal(locAsInt);
-	}
-
-	@Override
 	public Value visit(RefExp e, Env env) {
 		return heap.ref((Value) e.e().accept(this, env));
 	}
